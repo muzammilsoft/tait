@@ -1,0 +1,14 @@
+[train]
+data = "examples/datasets/demo.jsonl"
+output = "artifacts/tiny.npz"
+epochs = 3
+batch_size = 4
+lr = 0.003
+d_model = 16
+d_ff = 32
+vocab_size = 320
+bpe_sample_size = 100
+max_seq_len = 48
+checkpoint_every = 0
+cache_dir = ".tait-cache"
+no_wake_lock = true

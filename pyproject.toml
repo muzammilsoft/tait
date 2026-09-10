@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tait"
+version = "2.0.0"
+description = "Lightweight NumPy-first local AI training for Termux and constrained devices"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Khartoum Ghoul"}]
+license = {file = "LICENSE"}
+keywords = ["termux", "android", "numpy", "llm", "gpt", "ai", "training"]
+classifiers = ["Programming Language :: Python :: 3", "Operating System :: POSIX"]
+
+dependencies = []
+
+[project.optional-dependencies]
+numpy = ["numpy>=1.24"]
+hf = ["numpy>=1.24", "datasets>=2.14"]
+test = ["numpy>=1.24", "pytest>=8"]
+
+[project.scripts]
+tait = "tait.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

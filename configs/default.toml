@@ -1,0 +1,14 @@
+[train]
+data = "examples/datasets/demo.jsonl"
+output = "tait_model.npz"
+epochs = 10
+batch_size = 16
+lr = 0.003
+d_model = 32
+d_ff = 64
+vocab_size = 400
+bpe_sample_size = 3000
+cache_dir = ".tait-cache"
+checkpoint_every = 10
+checkpoint_path = "checkpoint_latest.npz"
+no_wake_lock = false
