@@ -1,7 +1,7 @@
 # TAIT — Termux AI Training
 
 **A lightweight, NumPy-first local AI training toolkit for Termux, Android, and constrained Linux devices.**  
-**Made in Sudan 🇸🇩**
+
 
 [English](README.md) · [العربية](README.ar.md) · [简体中文](README.zh-CN.md)
 
@@ -140,6 +140,8 @@ See [Roadmap](docs/roadmap.md).
 ## ❤️ Support
 
 Support and donation details will be published here once an official method is selected.
+
+**Made in Sudan 🇸🇩**
 
 ## License
 
