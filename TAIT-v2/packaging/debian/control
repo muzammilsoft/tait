@@ -1,0 +1,13 @@
+Source: tait
+Section: python
+Priority: optional
+Maintainer: Khartoum Ghoul
+Build-Depends: debhelper-compat (= 13), dh-python, python3-all, python3-setuptools
+Standards-Version: 4.7.0
+
+Package: python3-tait
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}, python3-numpy
+Description: Lightweight NumPy-first local AI training toolkit
+ TAIT is a small local AI training and chat toolkit aimed at Termux,
+ Android and resource-constrained Linux devices.
