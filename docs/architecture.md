@@ -1,25 +1,26 @@
 # Architecture
 
-TAIT v2 separates the user-facing CLI from the NumPy model engine, dataset sources, configuration, hardware helpers, setup, and web UI.
+TAIT keeps the model core deliberately small:
 
 ```text
 CLI
-├── setup / doctor / benchmark
-├── train / chat / data
-│
-├── Config
-├── DataSource
-│   ├── Local JSONL
-│   └── Optional Hugging Face
-├── Core
-│   ├── BPE tokenizer
-│   ├── MiniGPT
-│   ├── generation
-│   └── checkpoints
-├── Hardware
-│   └── Termux helpers
-└── Web
-    └── stdlib HTTP server + vanilla JS
+ ├── setup / doctor / benchmark
+ ├── train
+ │    ├── JSONL / data sources
+ │    ├── BPE tokenizer
+ │    ├── instruction serializer
+ │    ├── response-only loss
+ │    ├── validation evaluator
+ │    └── checkpoint manager
+ └── chat
+      ├── terminal
+      └── local web UI
+
+Core
+ ├── MiniGPT
+ ├── BPETokenizer
+ ├── generation
+ └── reasoning serializer/parser
 ```
 
-The v2 core intentionally has no Agent/function-calling layer. That boundary leaves room for a v3 Agent subsystem without forcing tools or execution policy into the training engine.
+Reasoning is a training/generation capability, not an Agent system. Function calling, tools, planning, and execution remain future v3 concerns.

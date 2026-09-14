@@ -27,6 +27,14 @@ pip install tait
 tait setup
 ```
 
+从源码安装：
+
+```bash
+git clone https://github.com/muzammilsoft/tait.git
+cd tait
+pip install -e .
+```
+
 Termux 推荐：
 
 ```bash
@@ -62,3 +70,7 @@ v2 专注于轻量、模块化的训练和聊天基础。未来 v3 可以加入 
 ## 许可证
 
 MIT — 见 [LICENSE](LICENSE)。
+
+## TAIT 2.1
+
+2.1 版本加入了紧凑推理/CoT 数据格式、response-only loss、validation loss、early stopping，以及 Ctrl+C 安全保存 checkpoint，并提供阿拉伯语、英语和混合数据集示例。详见 `docs/datasets.md` 和 `docs/training.md`。

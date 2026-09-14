@@ -1,7 +1,7 @@
 [train]
 data = "examples/datasets/mixed.jsonl"
-output = "tait_model.npz"
-epochs = 10
+output = "artifacts/reasoning.npz"
+epochs = 30
 batch_size = 16
 lr = 0.003
 d_model = 32
@@ -9,11 +9,11 @@ d_ff = 64
 vocab_size = 1000
 bpe_sample_size = 3000
 cache_dir = ".tait-cache"
-checkpoint_every = 10
+checkpoint_every = 5
 checkpoint_path = "checkpoint_latest.npz"
 best_checkpoint_path = "checkpoint_best.npz"
 validation_split = 0.1
-patience = 10
+patience = 7
 min_delta = 0.001
 early_stopping = true
 reasoning = true

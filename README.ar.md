@@ -1,10 +1,11 @@
 # TAIT — Termux AI Training
 
-**أداة خفيفة لتدريب وتشغيل نماذج ذكاء اصطناعي محليًا باستخدام NumPy، ومصممة لـ Termux وأندرويد والأجهزة محدودة ال[...]
+**أداة خفيفة لتدريب وتشغيل نماذج ذكاء اصطناعي محليًا باستخدام NumPy، ومصممة لـ Termux وأندرويد والأجهزة محدودة الموارد.**
+**صنع في السودان 🇸🇩**
 
 [English](README.md) · [العربية](README.ar.md) · [简体中文](README.zh-CN.md)
 
-بدأ TAIT كسكربت واحد لتدريب MiniGPT، وأصبح الآن مشروع Python منظمًا وقابلًا للمساهمة، مع الحفاظ على الفلسفة الخفيفة:[...]
+بدأ TAIT كسكربت واحد لتدريب MiniGPT، وأصبح الآن مشروع Python منظمًا وقابلًا للمساهمة، مع الحفاظ على الفلسفة الخفيفة: بدون PyTorch وبدون TensorFlow وبدون منظومة تشغيل ضخمة.
 
 ## ✨ الميزات
 
@@ -24,6 +25,14 @@
 ```bash
 pip install tait
 tait setup
+```
+
+من المصدر:
+
+```bash
+git clone https://github.com/muzammilsoft/tait.git
+cd tait
+pip install -e .
 ```
 
 في Termux يُفضّل:
@@ -62,4 +71,11 @@ tait chat --web --model demo.npz
 
 MIT — راجع [LICENSE](LICENSE).
 
-صنع في السودان 🇸🇩
+
+## TAIT 2.1
+
+TAIT 2.1 adds compact reasoning/CoT datasets, response-only loss, validation loss, early stopping, and Arabic/English/mixed sample datasets. See `docs/datasets.md` and `docs/training.md`.
+
+## TAIT 2.1
+
+أضاف الإصدار 2.1 دعم بيانات التفكير المختصر CoT، وresponse-only loss، وvalidation loss، وearly stopping، وحفظ checkpoint عند إيقاف التدريب بـ Ctrl+C، مع أمثلة بيانات عربية وإنجليزية ومختلطة. راجع `docs/datasets.md` و`docs/training.md`.

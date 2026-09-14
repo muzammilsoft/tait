@@ -1,120 +1,80 @@
 # TAIT — Termux AI Training
 
 **A lightweight, NumPy-first local AI training toolkit for Termux, Android, and constrained Linux devices.**  
-
+**Made in Sudan 🇸🇩**
 
 [English](README.md) · [العربية](README.ar.md) · [简体中文](README.zh-CN.md)
 
-TAIT started as a single-file MiniGPT trainer and is now organized as an open-source Python package while keeping the same lightweight philosophy: no PyTorch, no TensorFlow, and no large runtime stack.
+TAIT started as a single-file MiniGPT trainer and is now an open-source modular package. It stays deliberately lightweight: no PyTorch, no TensorFlow, and no large runtime stack.
 
 ## ✨ Features
 
 - NumPy-only MiniGPT training and inference
 - Byte-level BPE tokenizer
-- JSONL datasets with common prompt/response aliases
+- Compact reasoning / CoT training format
+- Response-only loss and validation loss
+- Early stopping and best checkpoints
+- Safe Ctrl+C checkpoint preservation
+- JSONL datasets with reasoning aliases
+- Arabic, English, and mixed sample datasets
 - Optional Hugging Face dataset adapter
 - TOML configuration with CLI overrides
-- First-run environment wizard with Termux-aware NumPy installation
-- `doctor` and `benchmark` diagnostics
-- Terminal chat and local browser chat (`--web`)
-- Checkpoints and `.npz` model files
-- Contributor-friendly modular source tree
+- Termux-aware setup, doctor, and benchmark
+- Terminal chat and local browser chat
 
 ## 🚀 Installation
-
-### Python / pip
 
 ```bash
 pip install tait
 ```
 
-### From source
+From source:
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
-cd TAIT
+git clone https://github.com/muzammilsoft/tait.git
+cd tait
 pip install -e .
 ```
 
-### Termux note
-
-Termux installations should prefer the Termux package for NumPy when available:
-
-```bash
-pkg install python python-numpy
-```
-
-Then run:
-
-```bash
-tait setup
-```
-
-The setup wizard runs automatically on the first normal TAIT execution and records completion. Re-run it explicitly with `tait setup --repair`.
-
 ## ⚡ Quick Start
 
-```bash
-tait doctor
-tait benchmark
-```
-
-Train a tiny model:
+From the repository:
 
 ```bash
-tait train --data examples/datasets/demo.jsonl --epochs 3 --output demo.npz
+tait data inspect examples/datasets/mixed.jsonl
+tait train --config configs/reasoning.toml
+tait chat --model artifacts/reasoning.npz
 ```
 
-Chat in the terminal:
+Browser chat:
 
 ```bash
-tait chat --model demo.npz
+tait chat --web --model artifacts/reasoning.npz
 ```
 
-Open the local browser UI:
+Show the generated compact reasoning trace:
 
 ```bash
-tait chat --web --model demo.npz
+tait chat --model artifacts/reasoning.npz --show-reasoning
 ```
+
+## 📦 Dataset format
+
+```json
+{"prompt":"شنو عاصمة السودان؟","reasoning":"السؤال عن عاصمة السودان، والمدينة المعروفة بأنها العاصمة هي الخرطوم.","response":"عاصمة السودان هي الخرطوم."}
+```
+
+The default dataset is `examples/datasets/mixed.jsonl`. Arabic and English datasets are included separately. See [Datasets](docs/datasets.md) for detailed generation rules.
 
 ## 🧠 Training
 
-Configuration files are TOML and command-line options override config values:
-
 ```bash
-tait train --config configs/tiny.toml
+tait train --config configs/default.toml
 ```
 
-See [Training](docs/training.md) and [Configuration](docs/configuration.md) for the full reference.
+CLI options override TOML settings. Validation, early stopping, response-only loss, and compact reasoning are enabled by default in the standard configuration.
 
-## 📦 Datasets
-
-Each JSONL line can use `prompt` / `response`, or the compatible aliases `question` / `answer` and `input` / `output`.
-
-```json
-{"prompt":"Hello","response":"Hi!"}
-```
-
-Inspect or validate a dataset:
-
-```bash
-tait data inspect examples/datasets/demo.jsonl
-tait data validate examples/datasets/demo.jsonl --strict
-```
-
-See [Datasets](docs/datasets.md) for details and the optional Hugging Face adapter.
-
-## 🌐 Web Chat
-
-`--web` starts a local HTTP server on `127.0.0.1` and uses the browser for Unicode-friendly chat, including Arabic, English, and Chinese. The UI uses only HTML/CSS/vanilla JavaScript.
-
-See [Web Chat](docs/web-chat.md).
-
-## 🤝 Contributing
-
-The project is intentionally modular so contributors can work on the CLI, model engine, datasets, configuration, hardware integration, or web UI independently.
-
-Read [CONTRIBUTING.md](CONTRIBUTING.md) and [Development](docs/development.md) before opening a pull request.
+See [Training](docs/training.md).
 
 ## 📚 Documentation
 
@@ -133,15 +93,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) and [Development](docs/development.md) b
 
 ## 🗺️ Roadmap
 
-TAIT v2 focuses on a clean lightweight training/chat foundation. A future v3 can add an **Agent** layer, function calling, tools, planning, and execution without forcing those concerns into the v2 core.
-
-See [Roadmap](docs/roadmap.md).
-
-## ❤️ Support
-
-Support and donation details will be published here once an official method is selected.
-
-**Made in Sudan 🇸🇩**
+v2.1 focuses on better instruction learning and compact reasoning. A future v2.x can add teacher/student distillation workflows. v3 can add an **Agent** layer with function calling, tools, planning, and execution.
 
 ## License
 

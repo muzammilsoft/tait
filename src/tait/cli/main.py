@@ -7,11 +7,11 @@ def _merge(command, args):
     from ..config.loader import load_config, apply_cli
     cfg = load_config(getattr(args, "config", None), command)
     if command == "train":
-        keys = ["data","output","epochs","batch_size","lr","d_model","d_ff","vocab_size","bpe_sample_size","max_seq_len","checkpoint_every","checkpoint_path","cache_dir","no_wake_lock"]
+        keys = ["data","output","epochs","batch_size","lr","d_model","d_ff","vocab_size","bpe_sample_size","max_seq_len","checkpoint_every","checkpoint_path","best_checkpoint_path","cache_dir","no_wake_lock","validation_split","patience","min_delta","early_stopping","reasoning","response_only_loss","seed"]
     elif command == "benchmark":
         keys = ["d_model","d_ff","batch_size","seq_len","dataset_size","epochs"]
     elif command == "chat":
-        keys = ["host","port","temperature","top_k","top_p","max_tokens"]
+        keys = ["host","port","temperature","top_k","top_p","max_tokens","show_reasoning"]
     else:
         return args
     cfg = apply_cli(cfg, args, keys)

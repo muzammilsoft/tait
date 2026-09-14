@@ -1,8 +1,9 @@
-"""JSONL dataset source."""
+"""JSONL dataset loading with optional reasoning/CoT fields."""
 import json
 
 ALIASES_PROMPT = ("prompt", "question", "input")
 ALIASES_RESPONSE = ("response", "answer", "output")
+ALIASES_REASONING = ("reasoning", "cot", "chain_of_thought", "thought", "thinking")
 
 
 def load_jsonl(path):
@@ -20,8 +21,9 @@ def load_jsonl(path):
                 continue
             prompt = next((str(obj.get(k) or "") for k in ALIASES_PROMPT if obj.get(k)), "")
             response = next((str(obj.get(k) or "") for k in ALIASES_RESPONSE if obj.get(k)), "")
+            reasoning = next((str(obj.get(k) or "") for k in ALIASES_REASONING if obj.get(k)), "")
             if prompt and response:
-                rows.append({"prompt": prompt, "response": response})
+                rows.append({"prompt": prompt, "response": response, **({"reasoning": reasoning} if reasoning else {})})
             else:
                 invalid += 1
     return rows, invalid

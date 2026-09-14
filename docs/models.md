@@ -1,7 +1,17 @@
 # Models
 
-The current model is a small single-head MiniGPT implemented directly with NumPy. It contains token/position embeddings, causal self-attention, a feed-forward block, residual connections, and an output head.
+The current TAIT model is a small from-scratch `MiniGPT` implemented with NumPy. It is designed for experimentation on Termux and constrained Linux devices rather than matching large commercial LLMs.
 
-Models are stored as `.npz` archives containing weights plus BPE merge information and tokenizer special-token IDs. This keeps inference independent of the training dataset.
+## Reasoning model format
 
-Future model families should expose clean load/generate boundaries so the CLI does not need to know model internals.
+TAIT 2.1 can train examples in this form:
+
+```text
+prompt <SEP> <think>compact reasoning</think><answer>final answer</answer> <END>
+```
+
+At chat time, TAIT extracts the answer section by default. Use `--show-reasoning` to display the generated reasoning trace.
+
+## Compatibility
+
+The `.npz` format continues to store model weights, BPE merge data, special token IDs, and block size. Loading remains compatible with existing TAIT v2 models because the model file format itself is unchanged.

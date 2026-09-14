@@ -1,13 +1,21 @@
 # Roadmap
 
-## v2
+## v2.1
 
-- Modular NumPy-first core
-- Package/CLI installation
-- Config and dataset abstraction
-- Local Web Chat
-- Termux-aware setup and diagnostics
-- Contributor documentation and AI provenance
+- Compact reasoning / CoT dataset format
+- Response-only loss
+- Validation loss
+- Early stopping
+- Best-checkpoint restoration
+- Safe Ctrl+C checkpointing
+- Arabic, English, and mixed example datasets
+
+## v2.x
+
+- Better evaluation metrics for instruction following
+- Distillation workflows for teacher-generated datasets
+- More efficient generation and tokenizer options
+- Optional model scaling presets
 
 ## v3 direction
 
@@ -16,4 +24,4 @@
 - Tools and execution adapters
 - Planner/executor boundaries
 
-The v3 Agent layer is intentionally not part of v2's training core.
+The Agent layer is intentionally not part of the v2 training core.
