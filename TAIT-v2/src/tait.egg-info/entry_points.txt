@@ -1,2 +1,0 @@
-[console_scripts]
-tait = tait.cli.main:main
