@@ -31,8 +31,8 @@ pip install tait
 From source:
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
-cd TAIT
+git clone https://github.com/muzammilsoft/tait.git
+cd tait
 pip install -e .
 ```
 

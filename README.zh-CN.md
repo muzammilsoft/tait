@@ -27,6 +27,14 @@ pip install tait
 tait setup
 ```
 
+从源码安装：
+
+```bash
+git clone https://github.com/muzammilsoft/tait.git
+cd tait
+pip install -e .
+```
+
 Termux 推荐：
 
 ```bash

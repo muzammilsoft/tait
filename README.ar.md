@@ -1,6 +1,6 @@
 # TAIT — Termux AI Training
 
-**أداة خفيفة لتدريب وتشغيل نماذج ذكاء اصطناعي محليًا باستخدام NumPy، ومصممة لـ Termux وأندرويد والأجهزة محدودة الموارد.**  
+**أداة خفيفة لتدريب وتشغيل نماذج ذكاء اصطناعي محليًا باستخدام NumPy، ومصممة لـ Termux وأندرويد والأجهزة محدودة الموارد.**
 **صنع في السودان 🇸🇩**
 
 [English](README.md) · [العربية](README.ar.md) · [简体中文](README.zh-CN.md)
@@ -25,6 +25,14 @@
 ```bash
 pip install tait
 tait setup
+```
+
+من المصدر:
+
+```bash
+git clone https://github.com/muzammilsoft/tait.git
+cd tait
+pip install -e .
 ```
 
 في Termux يُفضّل:
