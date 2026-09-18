@@ -1,0 +1,164 @@
+{
+  "experiment": "online_learning_poc",
+  "env": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "numpy": "2.5.3"
+  },
+  "generation_settings": {
+    "max_new_tokens": 40,
+    "temperature": 0.7,
+    "top_k": 8,
+    "top_p": 0.9,
+    "seed": 42
+  },
+  "learn": {
+    "prompt": "What is the capital of the kingdom of Numa?",
+    "response": "Zorak is the capital of the kingdom of Numa.",
+    "steps": 100,
+    "lr": 0.003
+  },
+  "training": {
+    "config": {
+      "d_model": 32,
+      "d_ff": 64,
+      "epochs": 150,
+      "lr": 0.003,
+      "batch_size": 8,
+      "vocab_size": 300,
+      "seed": 42,
+      "dataset": "examples/datasets/online_learning_base.jsonl (8 examples)",
+      "reasoning": false,
+      "response_only_loss": true
+    },
+    "train_time_s": 1.49,
+    "model_size_kb": 191.3,
+    "param_count": 29327,
+    "block_size": 42
+  },
+  "before": {
+    "exact_recall": {
+      "question": "What is the capital of the kingdom of Numa?",
+      "reply": "ays is Paris."
+    },
+    "paraphrase_1": {
+      "question": "Which city is the capital of Numa?",
+      "reply": "tal of France in a week."
+    },
+    "paraphrase_2": {
+      "question": "Where is the capital of Numa?",
+      "reply": "p."
+    },
+    "paraphrase_3": {
+      "question": "Numa's capital is which city?",
+      "reply": "apital of Franre is Paris."
+    },
+    "control_1": {
+      "question": "What color is grass?",
+      "reply": "The grass is green."
+    },
+    "control_2": {
+      "question": "What color is the sky?",
+      "reply": "The sky is blue."
+    },
+    "forget_A_1": {
+      "question": "Which river flows from north to south?",
+      "reply": "The river Sila flows from north to south."
+    },
+    "forget_A_2": {
+      "question": "The Sila river flows in which direction?",
+      "reply": "The river Sila flows from north to south."
+    }
+  },
+  "online_learning": {
+    "learn_time_s": 0.2,
+    "loss_before": 12.9214,
+    "loss_after": 0.0014,
+    "target_tokens": 11,
+    "weight_change_l2_total": 7.916786,
+    "weight_change_l2_per_param": {
+      "wte": 1.058354,
+      "wpe": 1.397842,
+      "Wq": 1.316467,
+      "Wk": 1.318016,
+      "Wv": 1.167365,
+      "Wo": 1.087721,
+      "W1": 1.910078,
+      "b1": 0.297632,
+      "W2": 1.816465,
+      "b2": 0.186072,
+      "Whead": 6.70379,
+      "bhead": 1.254326
+    },
+    "learned_model_size_kb": 191.3
+  },
+  "after": {
+    "exact_recall": {
+      "question": "What is the capital of the kingdom of Numa?",
+      "reply": "Zorak is the cak is  cak is  is cak is  cak cak cak"
+    },
+    "paraphrase_1": {
+      "question": "Which city is the capital of Numa?",
+      "reply": "thath  is thaorak is the cak is  is cak cak is  cak cak"
+    },
+    "paraphrase_2": {
+      "question": "Where is the capital of Numa?",
+      "reply": "rakthathe cathe orak is the cak is ak cak is  cak cak"
+    },
+    "paraphrase_3": {
+      "question": "Numa's capital is which city?",
+      "reply": "Zorth ok is th orak is the cak is cak cak cak cak"
+    },
+    "control_1": {
+      "question": "What color is grass?",
+      "reply": "ZorthcthththcZthththth th cath ththak is the cak cak cak"
+    },
+    "control_2": {
+      "question": "What color is the sky?",
+      "reply": "orthcththththththththth th th th ththak is the cak cak cak"
+    },
+    "forget_A_1": {
+      "question": "Which river flows from north to south?",
+      "reply": "orthoorthrthe the ok is tharak is ththe cak cak cak ca"
+    },
+    "forget_A_2": {
+      "question": "The Sila river flows in which direction?",
+      "reply": "Zththrthe thathathathath k is ththe cak cak cak cak ca"
+    }
+  },
+  "after_reload": {
+    "exact_recall": {
+      "question": "What is the capital of the kingdom of Numa?",
+      "reply": "Zorak is the cak is  cak is  is cak is  cak cak cak"
+    },
+    "paraphrase_1": {
+      "question": "Which city is the capital of Numa?",
+      "reply": "thath  is thaorak is the cak is  is cak cak is  cak cak"
+    },
+    "paraphrase_2": {
+      "question": "Where is the capital of Numa?",
+      "reply": "rakthathe cathe orak is the cak is ak cak is  cak cak"
+    },
+    "paraphrase_3": {
+      "question": "Numa's capital is which city?",
+      "reply": "Zorth ok is th orak is the cak is cak cak cak cak"
+    },
+    "control_1": {
+      "question": "What color is grass?",
+      "reply": "ZorthcthththcZthththth th cath ththak is the cak cak cak"
+    },
+    "control_2": {
+      "question": "What color is the sky?",
+      "reply": "orthcththththththththth th th th ththak is the cak cak cak"
+    },
+    "forget_A_1": {
+      "question": "Which river flows from north to south?",
+      "reply": "orthoorthrthe the ok is tharak is ththe cak cak cak ca"
+    },
+    "forget_A_2": {
+      "question": "The Sila river flows in which direction?",
+      "reply": "Zththrthe thathathathath k is ththe cak cak cak cak ca"
+    },
+    "learn_example_loss": 0.0014
+  }
+}
