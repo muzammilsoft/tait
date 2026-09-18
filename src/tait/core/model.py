@@ -9,6 +9,29 @@ def softmax(x, axis=-1):
     return e / (np.sum(e, axis=axis, keepdims=True) + 1e-9)
 
 
+def _single_example_batch(ids, pad_id, block_size, sep_id, response_only=True):
+    """Build the (x, y, valid, tgt_valid) batch for one learn() example.
+
+    Same layout as the training batches: x = s[:-1], y = s[1:], with the
+    loss mask covering only the response tokens after SEP when
+    response_only is True. Sequences longer than block_size + 1 are
+    truncated, exactly like training does.
+    """
+    s = ids[:block_size + 1]
+    L = len(s) - 1
+    x = np.full((1, L), pad_id, dtype=np.int64)
+    y = np.full((1, L), pad_id, dtype=np.int64)
+    valid = np.zeros((1, L), dtype=bool)
+    tgt_valid = np.zeros((1, L), dtype=bool)
+    x[0, :L], y[0, :L] = s[:-1], s[1:]
+    valid[0, :L] = True
+    if response_only and sep_id in s:
+        tgt_valid[0, s.index(sep_id):L] = True
+    else:
+        tgt_valid[0, :L] = True
+    return x, y, valid, tgt_valid
+
+
 class MiniGPT:
     def __init__(self, vocab_size, pad_id, d_model=32, d_ff=64, block_size=64, seed=42):
         rng = np.random.default_rng(seed)
@@ -127,6 +150,69 @@ class MiniGPT:
             m_hat = self.m[p] / (1 - beta1 ** self.t)
             v_hat = self.v[p] / (1 - beta2 ** self.t)
             setattr(self, p, getattr(self, p) - lr * m_hat / (np.sqrt(v_hat) + eps))
+
+    def learn(self, tokenizer, prompt, response, reasoning="",
+              enable_reasoning=False, steps=10, lr=3e-3,
+              response_only=True, verbose=False):
+        """Online / inference-time learning on a single example.
+
+        Encodes ``prompt`` + ``response`` exactly like training does
+        (``format_example`` serialization, SEP/END framing, response-only
+        loss mask), then runs ``steps`` forward/backward/Adam steps on that
+        one example using the model's own optimizer state.
+
+        This mutates the model's weights in place. It is memorization-scale
+        learning, not a replacement for training: there is no validation
+        split, no early stopping, and nothing is saved automatically -- call
+        ``save()`` yourself if you want to keep the updated weights.
+
+        Online learning != AGI, != guaranteed reasoning, != automatic
+        self-improvement. It is a research hook for studying continual
+        weight updates at inference time.
+
+        Returns a dict with ``loss_before``, ``loss_after``, ``losses``
+        (per-step), ``steps``, ``lr`` and ``target_tokens``.
+        """
+        from .reasoning import format_example
+
+        prompt_text, target_text = format_example(
+            prompt, response, reasoning, enable_reasoning)
+        ids = tokenizer.encode(prompt_text + SEP + target_text + END)
+        x, y, valid, tgt_valid = _single_example_batch(
+            ids, self.pad_id, self.block_size, tokenizer.sep_id,
+            response_only=response_only)
+
+        def _nll(probs):
+            p = np.clip(probs, 1e-9, 1.0)
+            yi = np.clip(y, 0, self.V - 1)
+            ll = np.log(np.take_along_axis(p, yi[..., None], axis=-1)[..., 0])
+            return float(-(ll * tgt_valid).sum() / max(tgt_valid.sum(), 1))
+
+        probs, _ = self.forward(x, valid)
+        loss_before = _nll(probs)
+        losses = []
+        for _ in range(max(int(steps), 0)):
+            probs, cache = self.forward(x, valid)
+            loss = _nll(probs)
+            losses.append(loss)
+            grads = self.backward(cache, y, tgt_valid)
+            self.step(grads, lr=lr)
+        probs, _ = self.forward(x, valid)
+        loss_after = _nll(probs)
+        result = {
+            "loss_before": loss_before,
+            "loss_after": loss_after,
+            "losses": losses,
+            "steps": len(losses),
+            "lr": lr,
+            "target_tokens": int(tgt_valid.sum()),
+        }
+        if verbose:
+            print("learn: loss_before=%.4f loss_after=%.4f steps=%d lr=%g "
+                  "target_tokens=%d" % (
+                      loss_before, loss_after, len(losses), lr,
+                      result["target_tokens"]))
+        return result
 
     def forward_single(self, ids_cond):
         x = np.array([ids_cond])
