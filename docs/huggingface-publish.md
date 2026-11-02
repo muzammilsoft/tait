@@ -10,7 +10,7 @@ Core TAIT still needs only NumPy. Publishing is the only step that
 needs the official Hugging Face client:
 
 ```bash
-pip install "tait[publish]"
+pip install "tait[publish]" numpy  # numpy only if it is not yet installed
 ```
 
 ## 1. Save your token safely (once)
