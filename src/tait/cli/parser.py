@@ -44,4 +44,22 @@ def build_parser():
     i = dsub.add_parser("inspect"); i.add_argument("data"); i.add_argument("-n", type=int, default=3)
 
     s = sub.add_parser("setup", help="first-run setup / repair"); s.add_argument("--repair", action="store_true"); s.add_argument("--yes", action="store_true")
+
+    h = sub.add_parser("hf", help="Hugging Face token and publishing setup"); hsub = h.add_subparsers(dest="hf_command", required=True)
+    hsub.add_parser("login", help="store an HF token safely (typed hidden, mode 0600)")
+    hsub.add_parser("logout", help="delete the stored HF token")
+    hsub.add_parser("status", help="show whether an HF token is configured (never prints it)")
+    lc = hsub.add_parser("config", help="remember a default publish repo"); lc.add_argument("repo", help="e.g. username/model-name")
+
+    pub = sub.add_parser("publish", help="publish a trained TAIT model to Hugging Face")
+    pub.add_argument("--model", required=True, help="trained .npz model file")
+    pub.add_argument("--repo", default=None, help="e.g. username/model-name (or the repo saved by 'tait hf config')")
+    pub.add_argument("--private", action="store_true")
+    pub.add_argument("--description", default=None)
+    pub.add_argument("--message", default=None, dest="commit_message")
+    pub.add_argument("--dry-run", action="store_true", help="generate the model card, upload nothing")
+
+    t.add_argument("--publish", action="store_true", help="publish the trained model to Hugging Face after saving")
+    t.add_argument("--publish-repo", default=None, dest="publish_repo")
+    t.add_argument("--publish-private", action="store_true", dest="publish_private")
     return p

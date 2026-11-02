@@ -235,6 +235,50 @@ def cmd_train(args):
         Path(args.output).parent.mkdir(parents=True, exist_ok=True)
         model.save(args.output, tokenizer)
         print(f"[5/5] Saved model: {args.output} ({os.path.getsize(args.output)/1024:.1f} KB)")
+        # Training sidecar: real metadata for the model card, written next
+        # to the model. It stores the dataset NAME only, never a phone path.
+        try:
+            import json as _json
+
+            from ..hf import utc_now as _utc_now
+            from ..version import __version__ as _tait_version
+
+            meta_path = Path(args.output).with_suffix(".meta.json")
+            val_loss = None
+            if encoded_val:
+                val_loss = _evaluate(model, encoded_val, tokenizer.pad_id, block_size, tokenizer.sep_id, args.batch_size, args.response_only_loss)
+            meta = {
+                "tait_version": _tait_version,
+                "data": os.path.basename(args.data),
+                "examples": len(all_data),
+                "epochs": args.epochs,
+                "final_loss": float(avg_loss),
+                "val_loss": (float(val_loss) if val_loss is not None else None),
+                "d_model": int(args.d_model),
+                "d_ff": int(args.d_ff),
+                "vocab_size": int(tokenizer.vocab_size_total),
+                "block_size": int(block_size),
+                "seed": int(args.seed),
+                "created_at": _utc_now(),
+            }
+            meta_path.write_text(_json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
+            print(f"  Training metadata: {meta_path}")
+        except Exception as exc:  # metadata must never break a successful train
+            print(f"  [warning] could not write training metadata: {exc}")
+        if getattr(args, "publish", False):
+            from ..hf import publish_model, read_default_repo
+
+            repo = getattr(args, "publish_repo", None) or read_default_repo()
+            if not repo:
+                print("[publish] skipped: no repo given. Use --publish-repo username/model-name, or: tait hf config username/model-name")
+            else:
+                try:
+                    result = publish_model(args.output, repo, private=getattr(args, "publish_private", False))
+                    print(f"[publish] Published: {result['url']}")
+                except SystemExit as exc:
+                    print(f"[publish] FAILED (model is still saved locally): {exc}")
+                except Exception as exc:
+                    print(f"[publish] FAILED (model is still saved locally): {exc}")
     finally:
         if not args.no_wake_lock:
             wake_lock_release()
@@ -258,6 +302,81 @@ def cmd_chat(args):
         if not msg: continue
         if msg.lower() in ("exit", "quit"): print("Bye!"); break
         print(f"Model: {generate_reply(model, tokenizer, msg, show_reasoning=args.show_reasoning, max_new_tokens=args.max_tokens, temperature=args.temperature, top_k=args.top_k, top_p=args.top_p)}\n")
+
+
+def cmd_hf(args):
+    import getpass
+
+    from ..hf import (
+        delete_token,
+        read_default_repo,
+        read_token,
+        save_default_repo,
+        save_token,
+        whoami,
+    )
+
+    if args.hf_command == "login":
+        token = getpass.getpass("Hugging Face token (hidden, will not be echoed): ").strip()
+        if not token:
+            print("Empty token: nothing was saved.")
+            return 1
+        path = save_token(token)
+        print(f"Token saved to {path} (mode 0600). Revoke it any time at huggingface.co/settings/tokens.")
+        repo = input("Default publish repo, e.g. username/model-name (leave empty to skip): ").strip()
+        if repo:
+            try:
+                save_default_repo(repo)
+                print(f"Default repo saved: {repo}")
+            except ValueError as exc:
+                print(str(exc))
+        return 0
+    if args.hf_command == "logout":
+        if delete_token():
+            print("Stored Hugging Face token deleted.")
+        else:
+            print("No stored token was found.")
+        return 0
+    if args.hf_command == "status":
+        if read_token():
+            user = whoami()
+            print("Hugging Face token: configured" + (f" (account: {user})" if user else " (could not verify account)"))
+        else:
+            print("Hugging Face token: not configured. Run: tait hf login")
+        repo = read_default_repo()
+        print(f"Default repo: {repo or '(none)'}")
+        return 0
+    if args.hf_command == "config":
+        save_default_repo(args.repo)
+        print(f"Default repo saved: {args.repo}")
+        return 0
+    raise SystemExit(f"Unknown hf command: {args.hf_command}")
+
+
+def cmd_publish(args):
+    from ..hf import publish_model, read_default_repo
+
+    repo = args.repo or read_default_repo()
+    if not repo:
+        raise SystemExit("No repo given. Use --repo username/model-name, or save one with: tait hf config username/model-name")
+    result = publish_model(
+        args.model,
+        repo,
+        private=args.private,
+        description=args.description,
+        commit_message=args.commit_message,
+        dry_run=args.dry_run,
+    )
+    if args.dry_run:
+        print("Dry run: nothing was uploaded.")
+        print(f"Repo would be: {result['url']}")
+        print(f"Model file: {result['model_file']}")
+        print("--- model card preview ---")
+        print(result["card"])
+        return 0
+    print(f"Published: {result['url']}")
+    print(f"Model file: {result['model_file']}")
+    return 0
 
 
 def cmd_data_validate(args):

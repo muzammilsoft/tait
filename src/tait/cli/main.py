@@ -35,9 +35,11 @@ def main(argv=None):
         if code != 0: return code
     if args.command in ("train","benchmark","chat"):
         args = _merge(args.command, args)
-    from .commands import cmd_doctor, cmd_benchmark, cmd_train, cmd_chat, cmd_data_validate, cmd_data_inspect
+    from .commands import cmd_doctor, cmd_benchmark, cmd_train, cmd_chat, cmd_data_validate, cmd_data_inspect, cmd_hf, cmd_publish
     if args.command == "doctor": return cmd_doctor(args)
     if args.command == "benchmark": return cmd_benchmark(args)
+    if args.command == "hf": return cmd_hf(args)
+    if args.command == "publish": return cmd_publish(args)
     if args.command == "train": return cmd_train(args)
     if args.command == "chat": return cmd_chat(args)
     if args.command == "data":
