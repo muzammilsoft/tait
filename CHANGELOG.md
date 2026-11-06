@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.1
+
+- Pinned the publish extra to `huggingface_hub==0.30.2`, so `pip install "tait[publish]"` works on Termux with wheels only: hub 0.32 and newer depend on `hf_xet`, a Rust extension with no prebuilt Termux/Android wheel, so pip fell back to a slow source build that could fail on a phone. 0.30.2 has no `hf_xet` dependency and still provides everything TAIT uses (`HfApi.create_repo` / `upload_file`).
+- Documented the Termux note in `docs/huggingface-publish.md`: do not run `pip install -U huggingface_hub` afterwards, or the latest hub (and `hf_xet`) comes back; if a newer hub is already installed, the fix is `pip install "huggingface_hub==0.30.2"` plus `pip uninstall -y hf_xet` to remove the leftover orphan package.
+- No change to the `.npz` format, the model card, or the publish commands.
+
 ## 2.3.0
 
 - Added Hugging Face publishing: `tait hf login` (token typed hidden, stored with mode 0600, never printed or logged), `tait hf logout`, `tait hf status`, `tait hf config`, `tait publish --model <file.npz> --repo user/model`, and `tait train --publish --publish-repo user/model`.

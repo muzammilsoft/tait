@@ -13,6 +13,27 @@ needs the official Hugging Face client:
 pip install "tait[publish]" numpy  # numpy only if it is not yet installed
 ```
 
+## Termux note: no Rust build
+
+`tait[publish]` installs `huggingface_hub==0.30.2` on purpose, with
+wheels only and no Rust build. Hub 0.32 and newer depend on `hf_xet`,
+a Rust extension with no prebuilt wheel for Termux/Android, so `pip`
+falls back to building it from source: very slow on a phone, and it
+can fail outright. Version 0.30.2 has no `hf_xet` dependency and still
+provides everything TAIT uses (`create_repo` / `upload_file`), so
+publishing a small `.npz` model works the same way.
+
+Do **not** run `pip install -U huggingface_hub` afterwards: that
+pulls the latest hub (and `hf_xet`) back in. If a newer hub is
+already installed on the phone, downgrade it explicitly (installing
+`tait[publish]` does this by itself, but a leftover `hf_xet`
+package stays behind as an unused orphan, so remove it too):
+
+```bash
+pip install "huggingface_hub==0.30.2"
+pip uninstall -y hf_xet
+```
+
 ## 1. Save your token safely (once)
 
 Never paste a token into chat, a script, or a command line: it would
