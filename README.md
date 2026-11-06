@@ -98,3 +98,11 @@ v2.1 focuses on better instruction learning and compact reasoning. A future v2.x
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Support TAIT
+
+Donations are optional and help support TAIT development. You can donate in cryptocurrency via NOWPayments:
+
+<a href="https://nowpayments.io/donation?api_key=b0af7301-8eaa-4560-99a5-0c594a1ab48b" target="_blank" rel="noreferrer noopener">
+    <img src="https://nowpayments.io/images/embeds/donation-button-black.svg" alt="Crypto donation button by NOWPayments">
+</a>
